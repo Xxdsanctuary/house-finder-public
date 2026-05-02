@@ -6,7 +6,8 @@ A dynamic web app for finding roommates and shared flats in Singapore. Built wit
 
 This project is a public version of the real repository. It is meant for our final project to our web application development class subject (IS113) taught in Singapore Management University. There is partial use of AI, only for debugging and code structure (read more below). 
 
-Special thanks to my teammates who have worked hard for this project: <br>
+Special thanks to my teammates who have worked hard for this project:
+
 Dewa <br>
 Cledwyn <br>
 Seunghak <br>
