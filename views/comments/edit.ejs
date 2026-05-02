@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Comment - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <h1>Edit Comment</h1>
+
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <form action="/listings/<%= listingId %>/comments/<%= comment._id %>/edit" method="POST">
+        <label>Comment</label><br>
+        <textarea name="body" rows="4" cols="50" required><%= comment.body %></textarea><br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <br>
+    <a href="/listings/<%= listingId %>/comments">Cancel</a>
+
+</body>
+</html>

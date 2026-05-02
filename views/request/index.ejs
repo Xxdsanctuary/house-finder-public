@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>My Requests</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .requests-container {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 24px;
+        }
+
+        .requests-title {
+            margin: 0 0 24px;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .section-title {
+            margin: 0 0 14px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #222;
+        }
+
+        .section + .section {
+            margin-top: 32px;
+            border-top: 1px solid #e0e0e0;
+            padding-top: 24px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            color: #1f4f99;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .request-item {
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #fafafa;
+        }
+
+        .request-info {
+            flex: 1;
+        }
+
+        .request-title {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        .request-meta {
+            margin: 6px 0 0 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .request-status {
+            margin: 8px 0 0 0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 8px;
+        }
+
+        .status-open {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-accepted {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-rejected {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-closed {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .view-button {
+            background-color: #1f4f99;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+
+        .view-button:hover {
+            background-color: #163a7a;
+        }
+
+        .no-requests {
+            text-align: center;
+            color: #999;
+            padding: 20px 0;
+            font-size: 15px;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="requests-container">
+        <a href="/" class="back-link">← Back to Home</a>
+        <h1 class="requests-title">Requests</h1>
+
+        <%# Sent requests - shown when user is the applicant %>
+        <div class="section">
+            <h2 class="section-title">Sent Requests</h2>
+
+            <% if (sentRequests && sentRequests.length > 0) { %>
+                <% sentRequests.forEach(function(request) { %>
+                    <div class="request-item">
+                        <div class="request-info">
+                            <h3 class="request-title"><%= request.listingTitle %></h3>
+                            <div class="request-status">
+                                Status:
+                                <span class="status-badge status-<%= request.status %>">
+                                    <%= request.status.charAt(0).toUpperCase() + request.status.slice(1) %>
+                                </span>
+                            </div>
+                        </div>
+                        <a href="/requests/show-applicant/<%= request.listingId %>?requestId=<%= request._id %>"
+                            class="view-button">View Chat</a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="no-requests">
+                    <p>You haven't sent any requests yet.</p>
+                </div>
+            <% } %>
+        </div>
+
+        <%# Received requests - shown when user is the listing owner %>
+        <div class="section">
+            <h2 class="section-title">Received Requests</h2>
+
+            <% if (receivedRequests && receivedRequests.length > 0) { %>
+                <% receivedRequests.forEach(function(request) { %>
+                    <div class="request-item">
+                        <div class="request-info">
+                            <h3 class="request-title"><%= request.listingTitle %></h3>
+                            <p class="request-meta">From: <strong><%= request.applicantName %></strong></p>
+                            <div class="request-status">
+                                Status:
+                                <span class="status-badge status-<%= request.status %>">
+                                    <%= request.status.charAt(0).toUpperCase() + request.status.slice(1) %>
+                                </span>
+                            </div>
+                        </div>
+                        <a href="/requests/show-listingOwner/<%= request.requestId %>"
+                            class="view-button">View Chat</a>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <div class="no-requests">
+                    <p>No one has sent you a request yet.</p>
+                </div>
+            <% } %>
+        </div>
+    </div>
+</body>
+
+</html>

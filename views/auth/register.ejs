@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <h1>Create an Account</h1>
+
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <% if (success) { %>
+        <p style="color: green;">Account created successfully!</p>
+        <p>
+            <a href="/profile/preferences">Set up your room preferences</a> — takes less than a minute.
+        </p>
+    <% } else { %>
+
+        <form action="/auth/register" method="POST">
+
+            <label>Username *</label><br>
+            <input type="text" name="username" value="<%= formData ? formData.username : '' %>" required><br><br>
+
+            <label>Email *</label><br>
+            <input type="email" name="email" value="<%= formData ? formData.email : '' %>" required><br><br>
+
+            <label>Password *</label><br>
+            <input type="password" name="password" required><br><br>
+
+            <label>Gender *</label><br>
+            <select name="gender" required>
+                <option value="" disabled <%= formData ? '' : 'selected' %>>Select gender</option>
+                <option value="male" <%= formData && formData.gender === 'male' ? 'selected' : '' %>>Male</option>
+                <option value="female" <%= formData && formData.gender === 'female' ? 'selected' : '' %>>Female</option>
+                <option value="others" <%= formData && formData.gender === 'others' ? 'selected' : '' %>>Others</option>
+            </select><br><br>
+
+            <label>Age *</label><br>
+            <input type="number" name="age" min="16" max="100" value="<%= formData ? formData.age : '' %>" required><br><br>
+
+            <label>Contact Number (optional)</label><br>
+            <input type="text" name="contactNumber" placeholder="e.g. +65 9123 4567" value="<%= formData ? formData.contactNumber : '' %>"><br><br>
+
+            <button type="submit">Register</button>
+        </form>
+
+        <p>Already have an account? <a href="/auth/login">Login here</a></p>
+
+    <% } %>
+</body>
+</html>

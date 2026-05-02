@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Profile - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <h1>My Profile</h1>
+
+    <p><strong>Username:</strong> <%= user.username %></p>
+    <p><strong>Email:</strong> <%= user.email %></p>
+    <p><strong>Gender:</strong> <%= user.gender %></p>
+    <p><strong>Age:</strong> <%= user.age %></p>
+
+    <% if (user.bio) { %>
+        <p><strong>Bio:</strong> <%= user.bio %></p>
+    <% } %>
+
+    <% if (user.contactNumber) { %>
+        <p><strong>Contact:</strong> <%= user.contactNumber %></p>
+    <% } %>
+
+    <h2>Room Preferences</h2>
+    <% if (user.preferences && user.preferences.regions && user.preferences.regions.length > 0) { %>
+        <p><strong>Preferred Regions:</strong> <%= user.preferences.regions.join(', ') %></p>
+    <% } else { %>
+        <p><strong>Preferred Regions:</strong> Not set</p>
+    <% } %>
+
+    <% if (user.preferences && user.preferences.maxBudget) { %>
+        <p><strong>Max Budget:</strong> SGD <%= user.preferences.maxBudget %>/month</p>
+    <% } else { %>
+        <p><strong>Max Budget:</strong> Not set</p>
+    <% } %>
+
+    <% if (user.preferences && user.preferences.amenities) {
+        const amenityList = [];
+        if (user.preferences.amenities.privateToilet)  amenityList.push('Private Toilet');
+        if (user.preferences.amenities.aircon)         amenityList.push('Aircon');
+        if (user.preferences.amenities.wifi)           amenityList.push('WiFi');
+        if (user.preferences.amenities.fullyFurnished) amenityList.push('Fully Furnished');
+    %>
+        <p><strong>Amenities needed:</strong> <%= amenityList.length > 0 ? amenityList.join(', ') : 'None' %></p>
+    <% } %>
+
+    <hr>
+
+    <h2>Shortlisted Listings</h2>
+    <p><a href="/shortlist">View My Shortlist</a></p>
+
+    <h2>Requests &amp; Messages</h2>
+    <p><a href="/requests">My Requests</a></p>
+
+    <hr>
+
+    <a href="/profile/edit">Edit Profile</a> |
+    <a href="/profile/preferences">Edit Preferences</a> |
+    <a href="/profile/password">Change Password</a> |
+    <a href="/listings">Browse Listings</a>
+
+    <br><br>
+    <form action="/auth/logout" method="GET" style="display:inline">
+        <button type="submit">Sign Out</button>
+    </form>
+
+    <br><br>
+    <form action="/profile/delete" method="POST" onsubmit="return confirm('Are you sure you want to delete your account? This cannot be undone.')">
+        <button type="submit">Delete My Account</button>
+    </form>
+
+</body>
+</html>

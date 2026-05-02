@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create Listing</title>
+</head>
+
+<body>
+    <h1>Create a New Listing</h1>
+    <a href="/listings">Back to All Listings</a>
+    <hr>
+
+    <% if(typeof error !=='undefined' && error) { %>
+        <div>
+            <strong>Notice:</strong>
+            <%= error %>
+        </div>
+        <% } %>
+
+            <form action="/listings" method="POST">
+
+                <fieldset>
+                    <legend>
+                        <h3>1. Your Listing Profile</h3>
+                    </legend>
+                    <table border="0" cellpadding="5">
+                        <tr>
+                            <td valign="top"><label><b>Listing Title:</b><br><small>(e.g., "Looking for a
+                                        roommate")</small></label></td>
+                            <td valign="top"><input type="text" name="listingTitle" size="40" required></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label><b>Listing Description:</b></label></td>
+                            <td valign="top"><textarea name="listingDescription" rows="4" cols="42" required></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label><b>Your Budget / Rent per Month($):</b></label></td>
+                            <td valign="top"><input type="number" name="listingBudget" min="0" required></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label><b>Number of people you are looking for:</b></label></td>
+                            <td valign="top"><input type="number" name="noOfSlots" min="1" required></td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label><b>Preferred Gender:</b></label></td>
+                            <td valign="top">
+                                <select name="preferredGender" required>
+                                    <option value="Any">Any Gender</option>
+                                    <option value="Male">Male Only</option>
+                                    <option value="Female">Female Only</option>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+
+                <br>
+
+                <fieldset>
+                    <legend>
+                        <h3>2. Room Logistics</h3>
+                    </legend>
+                    <p><strong>Do you already have a room and need a roommate?</strong></p>
+                    <label>
+                        <input type="radio" id="noRoom" name="hasRoom" value="no" checked onchange="toggleRoomFields()">
+                        No, I am just a Seeker searching for a room to join.
+                    </label><br>
+
+                    <label>
+                        <input type="radio" id="yesRoom" name="hasRoom" value="yes" onchange="toggleRoomFields()">
+                        Yes, I have a room and I'm looking for a roommate to share it!
+                    </label>
+
+                    <br><br>
+
+                    <!-- THIS DIV IS HIDDEN BY DEFAULT -->
+                    <div id="roomFields" hidden>
+                        <fieldset bgcolor="#f9f9f9">
+                            <legend><b>Room Specifications</b></legend>
+                            <p><i>Since you selected 'Yes', please fill out your physical room details below.</i></p>
+
+                            <table border="0" cellpadding="5">
+                                <tr>
+                                    <td><label>Name of the Room:</label></td>
+                                    <td><input type="text" name="roomTitle" class="room-input" size="30"></td>
+                                </tr>
+                                <tr>
+                                    <td valign="top"><label>Physical Description:</label></td>
+                                    <td><textarea name="roomDescription" rows="4" cols="32"
+                                            class="room-input"></textarea></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Cover Image:</label></td>
+                                    <td>
+                                        <select name="image" class="room-input">
+                                            <option value="hall_1.jpeg">Hall 1</option>
+                                            <option value="hall_2.jpg">Hall 2</option>
+                                            <option value="hall_3.png">Hall 3</option>
+                                            <option value="hall_5.jpg">Hall 5</option>
+                                            <option value="hall_6.webp">Hall 6</option>
+                                            <option value="hall_7.jpeg">Hall 7</option>
+                                            <option value="hall_8.webp">Hall 8</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td><label>Exact Monthly Rent ($):</label></td>
+                                    <td><input type="number" name="monthlyRent" min="0" class="room-input"></td>
+                                </tr>
+                                <tr>
+                                    <td><label>Nearest MRT Station:</label></td>
+                                    <td>
+                                        <select name="nearestMRT" class="room-input">
+                                            <!-- Just a few commons here, assuming the user updates this enum on backend -->
+                                            <option value="Admiralty">Admiralty</option>
+                                            <option value="Aljunied">Aljunied</option>
+                                            <option value="Ang Mo Kio">Ang Mo Kio</option>
+                                            <option value="Bedok">Bedok</option>
+                                            <option value="Bugis">Bugis</option>
+                                            <option value="City Hall">City Hall</option>
+                                            <option value="Clementi">Clementi</option>
+                                            <option value="Jurong East">Jurong East</option>
+                                            <option value="Orchard">Orchard</option>
+                                            <option value="Paya Lebar">Paya Lebar</option>
+                                            <option value="Serangoon">Serangoon</option>
+                                            <option value="Tampines">Tampines</option>
+                                            <option value="Woodlands">Woodlands</option>
+                                            <option value="Yishun">Yishun</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <hr width="50%" align="left">
+
+                            <table border="0" cellpadding="5">
+                                <tr>
+                                    <th>Amenities:</th>
+                                    <td>
+                                        <label><input type="checkbox" name="privateToilet" class="room-input"> Private
+                                            Toilet</label><br>
+                                        <label><input type="checkbox" name="aircon" class="room-input"> Air
+                                            Conditioning</label><br>
+                                        <label><input type="checkbox" name="wifi" class="room-input"> Wi-Fi
+                                            Included</label><br>
+                                        <label><input type="checkbox" name="fullyFurnished" class="room-input"> Fully
+                                            Furnished</label>
+                                    </td>
+                                </tr>
+                            </table>
+                        </fieldset>
+                    </div>
+                </fieldset>
+
+                <br>
+                <div align="center">
+                    <button type="submit" style="padding:10px 20px; font-size:16px;"><b>Post Listing!</b></button>
+                </div>
+            </form>
+
+            <!-- Vanilla Javascript to gracefully hide/show and enable/disable the huge room form -->
+            <script>
+                function toggleRoomFields() {
+                    const hasRoom = document.querySelector('input[name="hasRoom"]:checked').value === 'yes';
+                    const roomDiv = document.getElementById('roomFields');
+                    const roomInputs = document.querySelectorAll('.room-input');
+
+                    if (hasRoom) {
+                        // Show the block and make inputs active & required
+                        roomDiv.hidden = false;
+                        roomInputs.forEach(input => {
+                            input.disabled = false;
+                            // Dont force checkboxes to be required
+                            if (input.type !== 'checkbox') input.required = true;
+                        });
+                    } else {
+                        // Hide the block and completely disable inputs so they don't break form submission
+                        roomDiv.hidden = true;
+                        roomInputs.forEach(input => {
+                            input.disabled = true;
+                            input.required = false;
+                        });
+                    }
+                }
+
+                // Run once on page load just to be 100% safe
+                window.onload = toggleRoomFields;
+            </script>
+</body>
+
+</html>

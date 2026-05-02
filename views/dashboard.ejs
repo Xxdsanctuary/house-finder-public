@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard - Roommate Finder</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .content { max-width: 680px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .welcome { margin-bottom: 24px; }
+        .welcome h1 { font-size: 1.4em; margin-bottom: 4px; }
+        .welcome p  { color: #666; font-size: 0.92em; }
+
+        .quick-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+        .quick-links a {
+            padding: 9px 18px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #1a1a2e;
+            font-size: 0.9em;
+        }
+        .quick-links a:hover { background: #f0f0f0; border-color: #bbb; }
+        .quick-links a.primary { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+        .quick-links a.primary:hover { background: #16213e; }
+
+        .ann-box {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px 20px;
+        }
+        .ann-box h2 { font-size: 0.95em; font-weight: bold; margin-bottom: 10px; color: #555; text-transform: uppercase; letter-spacing: 0.04em; }
+        .ann-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 0; border-bottom: 1px solid #f0f0f0; }
+        .ann-row:last-child { border-bottom: none; }
+        .ann-row a { text-decoration: none; color: #1a1a2e; font-size: 0.92em; }
+        .ann-row a:hover { text-decoration: underline; }
+        .ann-date { color: #aaa; font-size: 0.82em; white-space: nowrap; margin-left: 16px; }
+        .ann-empty { color: #999; font-size: 0.9em; font-style: italic; padding: 4px 0; }
+    </style>
+</head>
+<body>
+    <%- include('partials/nav') %>
+
+    <div class="content">
+        <div class="welcome">
+            <h1>Welcome back, <%= currentUser.username %>.</h1>
+            <p>Here's what's happening on Roommate Finder.</p>
+        </div>
+
+        <div class="quick-links">
+            <a href="/listings" class="primary">Browse Listings</a>
+            <a href="/listings/new">Post a Listing</a>
+            <a href="/shortlist">My Shortlist</a>
+            <a href="/requests">My Requests</a>
+            <a href="/profile">My Profile</a>
+        </div>
+
+        <div class="ann-box">
+            <h2>Announcements</h2>
+            <% if (announcements && announcements.length > 0) { %>
+                <% announcements.forEach(function(a) { %>
+                    <div class="ann-row">
+                        <a href="/announcements/<%= a._id %>"><%= a.title %></a>
+                        <span class="ann-date"><%= a.createdAt.toLocaleDateString() %></span>
+                    </div>
+                <% }) %>
+            <% } else { %>
+                <p class="ann-empty">No announcements at this time.</p>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Shortlist - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <h1>My Shortlisted Listings</h1>
+
+    <% if (items.length === 0) { %>
+        <p>You have no shortlisted listings yet.</p>
+        <a href="/listings">Browse Listings</a>
+    <% } else { %>
+        <% items.forEach(item => { %>
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <p><strong>Listing:</strong> <%= item.listingId && item.listingId.title ? item.listingId.title : item.listingId %></p>
+                <p>Added on: <%= item.createdAt.toDateString() %></p>
+
+                <a href="/listings/<%= item.listingId && item.listingId._id ? item.listingId._id : item.listingId %>">View Listing</a> &nbsp;
+
+                <form action="/shortlist/<%= item._id %>/remove" method="POST" style="display:inline">
+                    <input type="hidden" name="redirectTo" value="/shortlist">
+                    <button type="submit" onclick="return confirm('Remove from shortlist?')">Remove</button>
+                </form>
+            </div>
+        <% }) %>
+    <% } %>
+
+    <br>
+    <a href="/profile">Back to Profile</a>
+
+</body>
+</html>

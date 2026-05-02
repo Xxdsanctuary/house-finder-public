@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Announcement Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .content { max-width: 900px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .welcome { margin-bottom: 18px; }
+        .welcome h1 { font-size: 1.4em; margin-bottom: 4px; }
+        .welcome p  { color: #666; font-size: 0.92em; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px 20px;
+        }
+        .card + .card { margin-top: 14px; }
+
+        .toolbar { display:flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+        .muted { color: #777; font-size: 0.9em; }
+
+        .btn {
+            padding: 8px 14px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn:hover { background: #f0f0f0; border-color: #bbb; }
+        .btn.primary { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+        .btn.primary:hover { background: #16213e; }
+        .btn.danger { color: #b11; border-color: #e3b4b4; }
+        .btn.danger:hover { background: #fff1f1; border-color: #d89292; }
+
+        .error {
+            background: #fff1f1;
+            border: 1px solid #f0c7c7;
+            color: #a11;
+            padding: 10px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 0.92em;
+        }
+
+        .rf-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 2px solid #333;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            font-size: 0.92em;
+        }
+        .rf-table th, .rf-table td { padding: 10px 8px; }
+        .rf-table thead tr { border-bottom: 1px solid #ccc; }
+        .rf-table tbody tr { border-bottom: 1px solid #eee; }
+        .rf-table tbody tr:last-child { border-bottom: none; }
+        .rf-table .left { text-align: left; }
+
+        input[type="text"], textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 10px;
+            font-size: 0.95em;
+            font-family: inherit;
+        }
+        textarea { resize: vertical; min-height: 140px; }
+        .form-row { margin-top: 12px; }
+        .form-actions { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="content">
+        <div class="welcome">
+            <h1>Announcements</h1>
+            <p>Post updates that appear on the homepage.</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+
+        <div class="card">
+            <div class="toolbar">
+                <div class="muted">Total: <b><%= announcements.length %></b></div>
+                <div>
+                    <a class="btn" href="/admin">Back</a>
+                    <a class="btn" href="/admin/users">User Management</a>
+                    <button class="btn primary" type="button"
+                        onclick="document.getElementById('writeForm').hidden = !document.getElementById('writeForm').hidden;">
+                        Write
+                    </button>
+                </div>
+            </div>
+
+            <div id="writeForm" hidden>
+                <div class="card" style="padding: 14px 16px;">
+                    <div class="muted"><b>New Announcement</b></div>
+                    <form action="/admin/announcements" method="POST">
+                        <div class="form-row">
+                            <input type="text" name="title" placeholder="Enter title" required maxlength="100">
+                        </div>
+                        <div class="form-row">
+                            <textarea name="body" placeholder="Enter content" required></textarea>
+                        </div>
+                        <div class="form-actions">
+                            <button class="btn" type="button" onclick="document.getElementById('writeForm').hidden = true;">Cancel</button>
+                            <button class="btn primary" type="submit">Post</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <% if (announcements.length === 0) { %>
+                <p class="muted" style="padding: 6px 0;"><i>No announcements yet.</i></p>
+            <% } else { %>
+                <table class="rf-table">
+                    <thead>
+                        <tr>
+                            <th style="width: 60px;">No</th>
+                            <th class="left">Subject</th>
+                            <th style="width: 120px;">Writer</th>
+                            <th style="width: 120px;">Date</th>
+                            <th style="width: 70px;">Active</th>
+                            <th style="width: 170px;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <% announcements.forEach(function(a, i) { %>
+                            <tr>
+                                <td><%= announcements.length - i %></td>
+                                <td class="left"><a href="/announcements/<%= a._id %>"><%= a.title %></a></td>
+                                <td><%= a.createdBy ? a.createdBy.username : 'Unknown' %></td>
+                                <td><%= a.createdAt.toLocaleDateString() %></td>
+                                <td><%= a.isActive ? 'Yes' : 'No' %></td>
+                                <td>
+                                    <a class="btn" href="/admin/announcements/<%= a._id %>/edit">Edit</a>
+                                    <form action="/admin/announcements/<%= a._id %>/delete" method="POST" style="display:inline;"
+                                        onsubmit="return confirm('Delete this announcement?');">
+                                        <button class="btn danger" type="submit">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        <% }) %>
+                    </tbody>
+                </table>
+            <% } %>
+        </div>
+    </div>
+
+</body>
+
+</html>

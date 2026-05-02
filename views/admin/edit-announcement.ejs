@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Announcement</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .content { max-width: 680px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .welcome { margin-bottom: 18px; }
+        .welcome h1 { font-size: 1.4em; margin-bottom: 4px; }
+        .welcome p  { color: #666; font-size: 0.92em; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px 20px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn:hover { background: #f0f0f0; border-color: #bbb; }
+        .btn.primary { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+        .btn.primary:hover { background: #16213e; }
+
+        .error {
+            background: #fff1f1;
+            border: 1px solid #f0c7c7;
+            color: #a11;
+            padding: 10px 12px;
+            border-radius: 4px;
+            margin-bottom: 12px;
+            font-size: 0.92em;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 10px 10px;
+            font-size: 0.95em;
+            font-family: inherit;
+        }
+        textarea { resize: vertical; min-height: 160px; }
+        .form-row { margin-top: 12px; }
+        .form-actions { display:flex; gap: 10px; flex-wrap: wrap; margin-top: 12px; }
+        .muted { color: #777; font-size: 0.9em; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="content">
+        <div class="welcome">
+            <h1>Edit Announcement</h1>
+            <p>Edit the title, content, and active status.</p>
+        </div>
+
+        <% if (error) { %>
+            <div class="error"><%= error %></div>
+        <% } %>
+
+        <div class="card">
+            <form action="/admin/announcements/<%= announcement._id %>/update" method="POST">
+                <div class="form-row">
+                    <div class="muted"><b>Title</b></div>
+                    <input type="text" name="title" value="<%= announcement.title %>" required maxlength="100">
+                </div>
+
+                <div class="form-row">
+                    <div class="muted"><b>Body</b></div>
+                    <textarea name="body" required><%= announcement.body %></textarea>
+                </div>
+
+                <div class="form-row" style="font-size:0.92em;color:#333;">
+                    <label>
+                        <input type="checkbox" name="isActive" <%= announcement.isActive ? 'checked' : '' %>>
+                        Show on homepage
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <a class="btn" href="/admin/announcements">Cancel</a>
+                    <button class="btn primary" type="submit">Update</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+
+</html>

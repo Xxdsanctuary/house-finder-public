@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>User Management</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .content { max-width: 900px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .welcome { margin-bottom: 18px; }
+        .welcome h1 { font-size: 1.4em; margin-bottom: 4px; }
+        .welcome p  { color: #666; font-size: 0.92em; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px 20px;
+        }
+
+        .btn {
+            padding: 8px 14px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #1a1a2e;
+            font-size: 0.9em;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .btn:hover { background: #f0f0f0; border-color: #bbb; }
+
+        .toolbar { display:flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 10px; }
+        .muted { color: #777; font-size: 0.9em; }
+
+        .rf-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 2px solid #333;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            font-size: 0.92em;
+        }
+        .rf-table th, .rf-table td { padding: 10px 8px; }
+        .rf-table thead tr { border-bottom: 1px solid #ccc; }
+        .rf-table tbody tr { border-bottom: 1px solid #eee; }
+        .rf-table tbody tr:last-child { border-bottom: none; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="content">
+        <div class="welcome">
+            <h1>User Management</h1>
+            <p>Activate or deactivate accounts.</p>
+        </div>
+
+        <div class="card">
+            <div class="toolbar">
+                <div class="muted">Total: <b><%= users.length %></b></div>
+                <div>
+                    <a class="btn" href="/admin">Back</a>
+                    <a class="btn" href="/admin/announcements">Announcements</a>
+                </div>
+            </div>
+
+            <table class="rf-table">
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Active</th>
+                        <th style="width: 110px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% users.forEach(user => { %>
+                        <tr>
+                            <td><%= user.username %></td>
+                            <td><%= user.email %></td>
+                            <td><%= user.role %></td>
+                            <td><%= user.isActive ? 'Yes' : 'No' %></td>
+                            <td>
+                                <form action="/admin/users/<%= user._id %>/toggle-active" method="POST" style="display:inline;">
+                                    <button class="btn" type="submit"><%= user.isActive ? 'Deactivate' : 'Activate' %></button>
+                                </form>
+                            </td>
+                        </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

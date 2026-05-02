@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title><%= announcement.title %></title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .content { max-width: 680px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 18px 20px;
+        }
+
+        .meta {
+            display: flex;
+            gap: 14px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+            color: #777;
+            font-size: 0.9em;
+        }
+        .meta b { color: #555; font-weight: 600; }
+
+        h1 { font-size: 1.5em; line-height: 1.25; }
+        .body { margin-top: 16px; color: #333; line-height: 1.6; white-space: pre-wrap; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="content">
+        <div class="card">
+            <h1><%= announcement.title %></h1>
+            <div class="meta">
+                <div><b>Date</b> <%= announcement.createdAt.toLocaleDateString() %></div>
+                <div><b>Posted by</b> <%= announcement.createdBy ? announcement.createdBy.username : 'Admin' %></div>
+            </div>
+            <div class="body"><%= announcement.body %></div>
+        </div>
+    </div>
+</body>
+
+</html>

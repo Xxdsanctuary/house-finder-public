@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Listing</title>
+</head>
+
+<body>
+    <h1>Edit Listing</h1>
+    <a href="/listings/<%= listing._id %>">Back to Listing</a>
+    <hr>
+
+    <form action="/listings/<%= listing._id %>/update" method="POST">
+
+        <fieldset>
+            <legend>
+                <h3>1. Your Listing Profile</h3>
+            </legend>
+            <table border="0" cellpadding="5">
+                <tr>
+                    <td valign="top"><label><b>Listing Title:</b><br><small>(e.g., "Looking for a
+                                roommate")</small></label></td>
+                    <td valign="top"><input type="text" name="listingTitle" value="<%= listing.title %>" size="40"
+                            required></td>
+                </tr>
+                <tr>
+                    <td valign="top"><label><b>Listing Description:</b></label></td>
+                    <td valign="top"><textarea name="listingDescription" rows="4" cols="42"
+                            required><%= listing.description %></textarea></td>
+                </tr>
+                <tr>
+                    <td valign="top"><label><b>Your Budget / Rent per Month($):</b></label></td>
+                    <td valign="top"><input type="number" name="listingBudget" value="<%= listing.budget %>" min="0"
+                            required></td>
+                </tr>
+                <tr>
+                    <td valign="top"><label><b>Number of people you are looking for:</b></label></td>
+                    <td valign="top"><input type="number" name="noOfSlots" value="<%= listing.noOfSlots || 1 %>" min="1"
+                            required></td>
+                </tr>
+                <tr>
+                    <td valign="top"><label><b>Preferred Gender:</b></label></td>
+                    <td valign="top">
+                        <select name="preferredGender" required>
+                            <option value="Any" <%=listing.preferredGender==='Any' ? 'selected' : '' %>>Any Gender
+                            </option>
+                            <option value="Male" <%=listing.preferredGender==='Male' ? 'selected' : '' %>>Male Only
+                            </option>
+                            <option value="Female" <%=listing.preferredGender==='Female' ? 'selected' : '' %>>Female
+                                Only</option>
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td valign="top"><label><b>Listing Status:</b></label></td>
+                    <td valign="top">
+                        <select name="status" required>
+                            <option value="available" <%=listing.status==='available' ? 'selected' : '' %>>🚀 Available
+                            </option>
+                            <option value="fully booked" <%=listing.status==='fully booked' ? 'selected' : '' %>>🛑
+                                Fully Booked</option>
+                            <option value="completed" <%=listing.status==='completed' ? 'selected' : '' %>>✅ Completed
+                            </option>
+                        </select>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <br>
+
+        <fieldset>
+            <legend>
+                <h3>2. Room Logistics</h3>
+            </legend>
+            <p><strong>Do you already have a room and need a roommate?</strong></p>
+            <label>
+                <input type="radio" id="noRoom" name="hasRoom" value="no" <%=!listing.room ? 'checked' : '' %>
+                onchange="toggleRoomFields()">
+                No, I am just a Seeker searching for a room to join.
+            </label><br>
+
+            <label>
+                <input type="radio" id="yesRoom" name="hasRoom" value="yes" <%=listing.room ? 'checked' : '' %>
+                onchange="toggleRoomFields()">
+                Yes, I have a room and I'm looking for a roommate to share it!
+            </label>
+
+            <br><br>
+
+            <!-- THIS DIV IS HIDDEN BY DEFAULT OR SHOWN IF THEY HAVE A ROOM -->
+            <div id="roomFields" <%=!listing.room ? 'hidden' : '' %>>
+                <fieldset bgcolor="#f9f9f9">
+                    <legend><b>Room Specifications</b></legend>
+                    <p><i>Since you selected 'Yes', please fill out your physical room details below.</i></p>
+
+                    <table border="0" cellpadding="5">
+                        <tr>
+                            <td><label>Name of the Room:</label></td>
+                            <td><input type="text" name="roomTitle"
+                                    value="<%= listing.room ? listing.room.title : '' %>" class="room-input" size="30">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td valign="top"><label>Physical Description:</label></td>
+                            <td><textarea name="roomDescription" rows="4" cols="32"
+                                    class="room-input"><%= listing.room ? listing.room.description : '' %></textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Cover Image:</label></td>
+                            <td>
+                                <select name="image" class="room-input">
+                                    <% const imgs=['hall_1.jpeg', 'hall_2.jpg' , 'hall_3.png' , 'hall_5.jpg'
+                                        , 'hall_6.webp' , 'hall_7.jpeg' , 'hall_8.webp' ]; %>
+                                        <% imgs.forEach(img=> { %>
+                                            <option value="<%= img %>" <%=(listing.room && listing.room.image===img)
+                                                ? 'selected' : '' %>><%= img %>
+                                            </option>
+                                            <% }) %>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label>Exact Monthly Rent ($):</label></td>
+                            <td><input type="number" name="monthlyRent"
+                                    value="<%= listing.room ? listing.room.monthlyRent : '' %>" min="0"
+                                    class="room-input"></td>
+                        </tr>
+                        <tr>
+                            <td><label>Nearest MRT Station:</label></td>
+                            <td>
+                                <select name="nearestMRT" class="room-input">
+                                    <% const mrts=['Admiralty', 'Aljunied' , 'Ang Mo Kio' , 'Bedok' , 'Bugis'
+                                        , 'City Hall' , 'Clementi' , 'Jurong East' , 'Orchard' , 'Paya Lebar'
+                                        , 'Serangoon' , 'Tampines' , 'Woodlands' , 'Yishun' ]; %>
+                                        <% mrts.forEach(mrt=> { %>
+                                            <option value="<%= mrt %>" <%=(listing.room &&
+                                                listing.room.nearestMRT===mrt) ? 'selected' : '' %>><%= mrt %>
+                                            </option>
+                                            <% }) %>
+                                </select>
+                            </td>
+                        </tr>
+                    </table>
+
+                    <hr width="50%" align="left">
+
+                    <table border="0" cellpadding="5">
+                        <tr>
+                            <th>Amenities:</th>
+                            <td>
+                                <label><input type="checkbox" name="privateToilet" class="room-input" <%=(listing.room
+                                        && listing.room.amenities.privateToilet) ? 'checked' : '' %>> Private
+                                    Toilet</label><br>
+                                <label><input type="checkbox" name="aircon" class="room-input" <%=(listing.room &&
+                                        listing.room.amenities.aircon) ? 'checked' : '' %>> Air Conditioning</label><br>
+                                <label><input type="checkbox" name="wifi" class="room-input" <%=(listing.room &&
+                                        listing.room.amenities.wifi) ? 'checked' : '' %>> Wi-Fi Included</label><br>
+                                <label><input type="checkbox" name="fullyFurnished" class="room-input" <%=(listing.room
+                                        && listing.room.amenities.fullyFurnished) ? 'checked' : '' %>> Fully
+                                    Furnished</label>
+                            </td>
+                        </tr>
+                    </table>
+                </fieldset>
+            </div>
+        </fieldset>
+
+        <br>
+        <div align="center">
+            <button type="submit" style="padding:10px 20px; font-size:16px;"><b>Update Listing!</b></button>
+        </div>
+    </form>
+
+    <br>
+    <div align="center">
+        <form action="/listings/<%= listing._id %>/delete" method="POST"
+            onsubmit="return confirm('Are you sure you want to delete this listing?');">
+            <button type="submit" style="color:red; cursor:pointer;"><b>Delete Listing</b></button>
+        </form>
+    </div>
+
+    <script>
+        function toggleRoomFields() {
+            const hasRoom = document.querySelector('input[name="hasRoom"]:checked').value === 'yes';
+            const roomDiv = document.getElementById('roomFields');
+            const roomInputs = document.querySelectorAll('.room-input');
+
+            if (hasRoom) {
+                roomDiv.hidden = false;
+                roomInputs.forEach(input => {
+                    input.disabled = false;
+                    if (input.type !== 'checkbox') input.required = true;
+                });
+            } else {
+                roomDiv.hidden = true;
+                roomInputs.forEach(input => {
+                    input.disabled = true;
+                    input.required = false;
+                });
+            }
+        }
+        window.onload = toggleRoomFields;
+    </script>
+</body>
+
+</html>

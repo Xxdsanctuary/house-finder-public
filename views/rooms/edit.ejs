@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Edit Room</title>
+</head>
+
+<body>
+    <h1>Edit Room: <%= room.title %>
+    </h1>
+    <a href="/rooms">Back to All Rooms</a> | <a href="/rooms/<%= room._id %>">Cancel</a>
+    <hr>
+
+    <form action="/rooms/<%= room._id %>/update" method="POST">
+        <h3>1. Basic Information</h3>
+        <label>Title:</label><br>
+        <input type="text" name="title" value="<%= room.title %>" required><br><br>
+
+        <label>Description:</label><br>
+        <textarea name="description" rows="4" required><%= room.description %></textarea><br><br>
+
+        <label>Cover Image:</label><br>
+        <select name="image" required>
+            <option value="hall_1.jpeg" <%=room.image==='hall_1.jpeg' ? 'selected' : '' %>>Hall 1</option>
+            <option value="hall_2.jpg" <%=room.image==='hall_2.jpg' ? 'selected' : '' %>>Hall 2</option>
+            <option value="hall_3.png" <%=room.image==='hall_3.png' ? 'selected' : '' %>>Hall 3</option>
+            <option value="hall_5.jpg" <%=room.image==='hall_5.jpg' ? 'selected' : '' %>>Hall 5</option>
+            <option value="hall_6.webp" <%=room.image==='hall_6.webp' ? 'selected' : '' %>>Hall 6</option>
+            <option value="hall_7.jpeg" <%=room.image==='hall_7.jpeg' ? 'selected' : '' %>>Hall 7</option>
+            <option value="hall_8.webp" <%=room.image==='hall_8.webp' ? 'selected' : '' %>>Hall 8</option>
+        </select><br><br>
+
+        <h3>2. Logistics</h3>
+        <label>Monthly Rent ($):</label><br>
+        <input type="number" name="monthlyRent" value="<%= room.monthlyRent %>" min="0" required><br><br>
+
+        <label>Region:</label><br>
+        <select name="region" required>
+            <option value="North" <%=room.region==='North' ? 'selected' : '' %>>North</option>
+            <option value="South" <%=room.region==='South' ? 'selected' : '' %>>South</option>
+            <option value="East" <%=room.region==='East' ? 'selected' : '' %>>East</option>
+            <option value="West" <%=room.region==='West' ? 'selected' : '' %>>West</option>
+            <option value="Central" <%=room.region==='Central' ? 'selected' : '' %>>Central</option>
+        </select><br><br>
+
+        <label>Nearest MRT Station:</label><br>
+        <select name="nearestMRT" required>
+            <!-- Same stations as new.ejs, keeping it brief but highlighting exactly how it works -->
+            <option value="Admiralty" <%=room.nearestMRT==='Admiralty' ? 'selected' : '' %>>Admiralty</option>
+            <option value="Aljunied" <%=room.nearestMRT==='Aljunied' ? 'selected' : '' %>>Aljunied</option>
+            <option value="Ang Mo Kio" <%=room.nearestMRT==='Ang Mo Kio' ? 'selected' : '' %>>Ang Mo Kio</option>
+            <option value="Bugis" <%=room.nearestMRT==='Bugis' ? 'selected' : '' %>>Bugis</option>
+            <option value="City Hall" <%=room.nearestMRT==='City Hall' ? 'selected' : '' %>>City Hall</option>
+            <option value="Clementi" <%=room.nearestMRT==='Clementi' ? 'selected' : '' %>>Clementi</option>
+            <option value="Jurong East" <%=room.nearestMRT==='Jurong East' ? 'selected' : '' %>>Jurong East</option>
+            <option value="Orchard" <%=room.nearestMRT==='Orchard' ? 'selected' : '' %>>Orchard</option>
+            <option value="Tampines" <%=room.nearestMRT==='Tampines' ? 'selected' : '' %>>Tampines</option>
+            <option value="Woodlands" <%=room.nearestMRT==='Woodlands' ? 'selected' : '' %>>Woodlands</option>
+            <option value="Yishun" <%=room.nearestMRT==='Yishun' ? 'selected' : '' %>>Yishun</option>
+        </select><br><br>
+
+        <label>Status:</label><br>
+        <select name="availabilityStatus" required>
+            <option value="Available" <%=room.availabilityStatus==='Available' ? 'selected' : '' %>>Available</option>
+            <option value="Taken" <%=room.availabilityStatus==='Taken' ? 'selected' : '' %>>Taken</option>
+            <option value="Draft" <%=room.availabilityStatus==='Draft' ? 'selected' : '' %>>Draft</option>
+        </select><br><br>
+
+        <h3>3. Amenities</h3>
+        <label>Private Toilet:</label>
+        <input type="checkbox" name="privateToilet" <%=room.amenities && room.amenities.privateToilet ? 'checked' : ''
+            %>><br><br>
+
+        <label>Air Conditioning:</label>
+        <input type="checkbox" name="aircon" <%=room.amenities && room.amenities.aircon ? 'checked' : '' %>><br><br>
+
+        <label>Wi-Fi Included:</label>
+        <input type="checkbox" name="wifi" <%=room.amenities && room.amenities.wifi ? 'checked' : '' %>><br><br>
+
+        <label>Fully Furnished:</label>
+        <input type="checkbox" name="fullyFurnished" <%=room.amenities && room.amenities.fullyFurnished ? 'checked' : ''
+            %>><br><br>
+
+        <button type="submit">Update Room!</button>
+    </form>
+</body>
+
+</html>

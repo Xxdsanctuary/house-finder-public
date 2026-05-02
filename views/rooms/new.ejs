@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Create New Room</title>
+</head>
+
+<body>
+    <h1>Create a New Room Listing</h1>
+    <a href="/rooms">Back to All Rooms</a>
+    <hr>
+
+    <% if(typeof error !=='undefined' && error) { %>
+        <div>
+            <strong>⚠️ Notice:</strong>
+            <%= error %>
+        </div>
+        <% } %>
+
+            <form action="/rooms" method="POST">
+                <h3>1. Basic Information</h3>
+                <label>Title:</label><br>
+                <input type="text" name="title" required><br><br>
+
+                <label>Description:</label><br>
+                <textarea name="description" rows="4" required></textarea><br><br>
+
+                <label>Cover Image:</label><br>
+                <select name="image" required>
+                    <option value="hall_1.jpeg">Hall 1</option>
+                    <option value="hall_2.jpg">Hall 2</option>
+                    <option value="hall_3.png">Hall 3</option>
+                    <option value="hall_5.jpg">Hall 5</option>
+                    <option value="hall_6.webp">Hall 6</option>
+                    <option value="hall_7.jpeg">Hall 7</option>
+                    <option value="hall_8.webp">Hall 8</option>
+                </select><br><br>
+
+                <h3>2. Logistics</h3>
+                <label>Monthly Rent ($):</label><br>
+                <input type="number" name="monthlyRent" min="0" required><br><br>
+
+                <label>Region:</label><br>
+                <select name="region" required>
+                    <option value="North">North</option>
+                    <option value="South">South</option>
+                    <option value="East">East</option>
+                    <option value="West">West</option>
+                    <option value="Central">Central</option>
+                </select><br><br>
+
+                <label>Nearest MRT Station:</label><br>
+                <select name="nearestMRT" required>
+                    <option value="Admiralty">Admiralty</option>
+                    <option value="Aljunied">Aljunied</option>
+                    <option value="Ang Mo Kio">Ang Mo Kio</option>
+                    <!-- (Adding a few for brevity, but this would contain all 100+ stations) -->
+                    <option value="Bayfront">Bayfront</option>
+                    <option value="Bayshore">Bayshore</option>
+                    <option value="Bugis">Bugis</option>
+                    <option value="City Hall">City Hall</option>
+                    <option value="Clementi">Clementi</option>
+                    <option value="Dhoby Ghaut">Dhoby Ghaut</option>
+                    <option value="Jurong East">Jurong East</option>
+                    <option value="Orchard">Orchard</option>
+                    <option value="Paya Lebar">Paya Lebar</option>
+                    <option value="Serangoon">Serangoon</option>
+                    <option value="Tampines">Tampines</option>
+                    <option value="Woodlands">Woodlands</option>
+                    <option value="Yishun">Yishun</option>
+                </select><br><br>
+
+                <label>Status:</label><br>
+                <select name="availabilityStatus" required>
+                    <option value="Available">Available</option>
+                    <option value="Taken">Taken</option>
+                    <option value="Draft">Draft</option>
+                </select><br><br>
+
+                <h3>3. Amenities</h3>
+                <label>Private Toilet:</label>
+                <input type="checkbox" name="privateToilet"><br><br>
+
+                <label>Air Conditioning:</label>
+                <input type="checkbox" name="aircon"><br><br>
+
+                <label>Wi-Fi Included:</label>
+                <input type="checkbox" name="wifi"><br><br>
+
+                <label>Fully Furnished:</label>
+                <input type="checkbox" name="fullyFurnished"><br><br>
+
+                <button type="submit">Create Room!</button>
+            </form>
+</body>
+
+</html>

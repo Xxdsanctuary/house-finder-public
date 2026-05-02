@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>House Finder</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .hero {
+            background: #1a1a2e;
+            color: #fff;
+            padding: 56px 24px 48px;
+            text-align: center;
+        }
+        .hero img {
+            height: 52px;
+            margin-bottom: 20px;
+            display: block;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .hero h1 { font-size: 1.9em; margin-bottom: 10px; }
+        .hero p  { color: #aaa; font-size: 0.95em; margin-bottom: 28px; max-width: 480px; margin-left: auto; margin-right: auto; }
+        .hero-btns { display: flex; justify-content: center; gap: 12px; flex-wrap: wrap; }
+        .btn-primary {
+            padding: 10px 24px; background: #fff; color: #1a1a2e;
+            border-radius: 4px; text-decoration: none; font-weight: bold; font-size: 0.9em;
+        }
+        .btn-secondary {
+            padding: 10px 24px; background: transparent; color: #fff;
+            border: 1px solid #555; border-radius: 4px; text-decoration: none; font-size: 0.9em;
+        }
+        .btn-primary:hover  { background: #eee; }
+        .btn-secondary:hover { border-color: #aaa; }
+
+        .content { max-width: 700px; margin: 40px auto; padding: 0 20px 60px; }
+
+        .about {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 24px 28px;
+            margin-bottom: 24px;
+        }
+        .about h2 { font-size: 1em; font-weight: bold; color: #555; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 12px; }
+        .about p { font-size: 0.92em; color: #444; line-height: 1.65; margin-bottom: 10px; }
+        .about p:last-child { margin-bottom: 0; }
+
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .feature-card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px 18px;
+        }
+        .feature-card h3 { font-size: 0.88em; font-weight: bold; margin-bottom: 6px; color: #1a1a2e; }
+        .feature-card p  { font-size: 0.85em; color: #666; line-height: 1.5; }
+    </style>
+</head>
+<body>
+
+    <div class="hero">
+        <img src="/logo.png" alt="House Finder">
+        <h1>Find Your Next Roommate</h1>
+        <p>A platform for students to post rooms, find flatmates, and connect with potential roommates across Singapore.</p>
+        <div class="hero-btns">
+            <a href="/auth/register" class="btn-primary">Get Started</a>
+            <a href="/auth/login"    class="btn-secondary">Login</a>
+            <a href="/listings"      class="btn-secondary">Browse Listings</a>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="about">
+            <h2>About</h2>
+            <p>House Finder is a roommate matching web app built for students. Whether you have a spare room to offer or are looking for a place to stay, you can post a listing, filter by region and budget, and send a request to connect with other users.</p>
+            <p>Once matched, you can message within your request thread, shortlist listings you like, and leave comments on any listing.</p>
+        </div>
+
+        <div class="features">
+            <div class="feature-card">
+                <h3>Post a Listing</h3>
+                <p>Offer a room or create a seeker ad with your budget and preferences.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Filter &amp; Search</h3>
+                <p>Narrow down by region, budget, amenities, and gender preference.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Send Requests</h3>
+                <p>Express interest and chat directly with the listing owner.</p>
+            </div>
+            <div class="feature-card">
+                <h3>Shortlist</h3>
+                <p>Save listings you like and come back to them later.</p>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

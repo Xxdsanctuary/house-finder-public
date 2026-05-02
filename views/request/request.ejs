@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        Chat with <%= currentUserId == applicantId ? listingOwnerName : applicantName %>
+    </title>
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 24px;
+        }
+
+        .chat-wrap {
+            max-width: 720px;
+            margin: 0 auto;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 16px;
+        }
+
+        .chat-title {
+            margin: 0 0 12px;
+            font-size: 18px;
+        }
+
+        .chat-topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .back-link {
+            color: #1f4f99;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .chat-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .message-row {
+            display: flex;
+            width: 100%;
+        }
+
+        .message-row.sent {
+            justify-content: flex-end;
+        }
+
+        .message-row.received {
+            justify-content: flex-start;
+        }
+
+        .message-bubble {
+            max-width: 70%;
+            padding: 10px 12px;
+            border-radius: 10px;
+            line-height: 1.35;
+            word-break: break-word;
+        }
+
+        .message-row.sent .message-bubble {
+            background: #d9f2ff;
+        }
+
+        .message-row.received .message-bubble {
+            background: #ececec;
+        }
+
+        .empty-state {
+            color: #666;
+            font-style: italic;
+        }
+
+        .composer {
+            margin-top: 14px;
+            border-top: 1px solid #eee;
+            padding-top: 12px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .composer textarea {
+            width: 100%;
+            min-height: 72px;
+            resize: vertical;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            padding: 8px;
+            box-sizing: border-box;
+            font: inherit;
+        }
+
+        .composer button {
+            width: fit-content;
+            border: 1px solid #333;
+            background: #333;
+            color: #fff;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+        }
+
+        .composer button:hover {
+            opacity: 0.9;
+        }
+
+        .request-controls {
+            margin: 10px 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .request-status {
+            margin: 0;
+            color: #444;
+            font-size: 14px;
+        }
+
+        .request-error {
+            margin: 0;
+            color: #9b1c1c;
+            font-size: 14px;
+        }
+
+        .accept-btn {
+            border: 1px solid #1f6f3f;
+            background: #1f6f3f;
+            color: #fff;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .accept-btn:hover {
+            opacity: 0.9;
+        }
+
+        .undo-btn {
+            border: 1px solid #6b7280;
+            background: #6b7280;
+            color: #fff;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .undo-btn:hover {
+            opacity: 0.9;
+        }
+
+        .delete-btn {
+            border: 1px solid #9b1c1c;
+            background: #9b1c1c;
+            color: #fff;
+            border-radius: 6px;
+            padding: 8px 14px;
+            cursor: pointer;
+            font: inherit;
+        }
+
+        .delete-btn:hover {
+            opacity: 0.9;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="chat-wrap">
+        <div class="chat-topbar">
+            <h1 class="chat-title">
+                Chat with <%= currentUserId == applicantId ? listingOwnerName : applicantName %>
+            </h1>
+            <a class="back-link" href="<%= listingId ? ('/listings/' + listingId) : '/listings' %>">Back to Listing</a>
+        </div>
+
+        <div class="request-controls">
+            <p class="request-status">Status: <strong><%= requestStatus || 'open' %></strong></p>
+            <p class="request-status">Remaining slots: <strong><%= Number.isFinite(remainingSlots) ? remainingSlots : 'N/A' %></strong></p>
+
+            <% if (String(currentUserId) === String(listingOwnerId) && (requestStatus || 'open') === 'open') { %>
+                <form method="POST" action="/requests/accept/<%= requestId %>">
+                    <input type="hidden" name="action" value="accept">
+                    <button class="accept-btn" type="submit">Accept Request</button>
+                </form>
+            <% } else if (String(currentUserId) === String(listingOwnerId) && (requestStatus || 'open') === 'accepted') { %>
+                <form method="POST" action="/requests/accept/<%= requestId %>">
+                    <input type="hidden" name="action" value="undo">
+                    <button class="undo-btn" type="submit">Undo Accept</button>
+                </form>
+            <% } %>
+
+            <% if (String(currentUserId) === String(listingOwnerId)) { %>
+                <form method="POST" action="/requests/delete/<%= requestId %>" onsubmit="return confirm('Are you sure you want to delete this request?')">
+                    <button class="delete-btn" type="submit">Delete Request</button>
+                </form>
+            <% } %>
+        </div>
+
+        <% if (requestActionError) { %>
+            <p class="request-error"><%= requestActionError %></p>
+        <% } %>
+
+        <div class="chat-list">
+            <% const orderedMessages = (messages || []).slice().sort(function(a, b) {
+                return new Date(a.createdAt) - new Date(b.createdAt);
+            }); %>
+
+            <% if (messages && messages.length) { %>
+                <% orderedMessages.forEach(function(msg) { %>
+                    <% const isCurrentUser = String(msg.userId) === String(currentUserId); %>
+                    <div class="message-row <%= isCurrentUser ? 'sent' : 'received' %>">
+                        <div class="message-bubble"><%= msg.messageContent %></div>
+                    </div>
+                <% }); %>
+            <% } else { %>
+                <p class="empty-state">No messages yet.</p>
+            <% } %>
+        </div>
+
+        <form class="composer" method="POST" action="/messages/new">
+            <input type="hidden" name="requestId" value="<%= requestId %>">
+            <textarea name="messageContent" placeholder="Type a message" 
+                required
+                pattern=".*\S.*"
+                title="Please enter at least one non-space character."></textarea>
+            <button type="submit">Send</button>
+        </form>
+    </div>
+</body>
+
+
+
+</html>

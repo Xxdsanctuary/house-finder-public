@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>All Listings</title>
+    <style>
+        body { font-family: sans-serif; margin: 0; background: #f8f8f8; }
+        h1 { margin: 0 0 4px; font-size: 1.4em; }
+        .page-header { background: #fff; padding: 16px 20px 12px; border-bottom: 1px solid #ddd; }
+        .filter-bar { background: #fff; padding: 12px 20px; border-bottom: 1px solid #ddd; margin-bottom: 16px; }
+        .filter-bar table { width: 100%; }
+        .filter-bar input[type=text],
+        .filter-bar input[type=number],
+        .filter-bar select { padding: 5px 8px; border: 1px solid #ccc; border-radius: 3px; font-size: 0.9em; }
+        .filter-bar button { padding: 6px 14px; cursor: pointer; border-radius: 3px; border: 1px solid #aaa; background: #fff; font-size: 0.9em; }
+        .filter-bar button[type=submit] { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+        .listings-wrap { padding: 0 20px 40px; }
+        .listings-table { width: 100%; border-collapse: collapse; background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+        .listings-table th { background: #f0f0f0; padding: 10px 14px; text-align: left; font-size: 0.88em; border-bottom: 2px solid #ddd; }
+        .listings-table td { padding: 12px 14px; border-bottom: 1px solid #eee; vertical-align: top; }
+        .listings-table tr:last-child td { border-bottom: none; }
+        .listings-table tr:hover td { background: #fafafa; }
+        .listing-title { font-size: 1em; font-weight: bold; margin: 0 0 6px; }
+        .badge { font-size: 11px; padding: 2px 8px; border-radius: 3px; margin-left: 6px; }
+        .badge-owner { background: #2196F3; color: #fff; }
+        .badge-match { background: #4CAF50; color: #fff; }
+        .listing-meta td { padding: 2px 8px 2px 0; font-size: 0.88em; color: #444; }
+        .listing-meta td:first-child { color: #888; white-space: nowrap; }
+        .btn-view { display: inline-block; padding: 7px 16px; background: #1a1a2e; color: #fff; text-decoration: none; border-radius: 3px; font-size: 0.88em; }
+        .btn-view:hover { background: #16213e; }
+        .type-badge { font-size: 11px; font-weight: bold; padding: 2px 7px; border-radius: 3px; background: #e8f4fd; color: #2196F3; margin-top: 4px; display: inline-block; }
+        .type-badge.seeker { background: #fff3e0; color: #e65100; }
+        tr.is-owner { border-left: 4px solid #2196F3; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+    <div class="page-header">
+        <h1>RoomFinder Listings</h1>
+    </div>
+
+    <div class="filter-bar">
+        <form action="/listings" method="GET">
+            <table border="0" cellpadding="5" cellspacing="0" width="100%">
+                <tr>
+                    <td><b>Search:</b></td>
+                    <td><input type="text" name="search" placeholder="Search titles or notes..."
+                            value="<%= locals.search || '' %>" size="25"></td>
+
+                    <td><b>Region:</b></td>
+                    <td>
+                        <select name="region">
+                            <option value="All" <%=locals.region==='All' ? 'selected' : '' %>>All Regions</option>
+                            <option value="North" <%=locals.region==='North' ? 'selected' : '' %>>North</option>
+                            <option value="South" <%=locals.region==='South' ? 'selected' : '' %>>South</option>
+                            <option value="East" <%=locals.region==='East' ? 'selected' : '' %>>East</option>
+                            <option value="West" <%=locals.region==='West' ? 'selected' : '' %>>West</option>
+                            <option value="Central" <%=locals.region==='Central' ? 'selected' : '' %>>Central</option>
+                        </select>
+                    </td>
+
+                    <td><b>Type:</b></td>
+                    <td>
+                        <select name="listingType">
+                            <option value="All" <%=locals.listingType==='All' ? 'selected' : '' %>>All Types</option>
+                            <option value="Room" <%=locals.listingType==='Room' ? 'selected' : '' %>>Room Offering</option>
+                            <option value="Seeker" <%=locals.listingType==='Seeker' ? 'selected' : '' %>>Room Seeker</option>
+                        </select>
+                    </td>
+
+                    <td>
+                        <label>
+                            <input type="hidden" name="showAllGender" value="false">
+                            <input type="checkbox" name="showAllGender" value="true" <%=locals.showAllGender ? 'checked' : '' %>>
+                            <b>Show All Genders</b>
+                        </label>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Max Budget:</b></td>
+                    <td><input type="number" name="maxBudget" placeholder="e.g. 1000"
+                            value="<%= locals.maxBudget || '' %>" size="10" min="0"></td>
+
+                    <td colspan="4">
+                        <b>Amenities:</b>
+                        <label><input type="checkbox" name="amenity_aircon" value="true" <%=locals.amenity_aircon ? 'checked' : '' %>> Aircon</label>
+                        <label><input type="checkbox" name="amenity_wifi" value="true" <%=locals.amenity_wifi ? 'checked' : '' %>> Wi-Fi</label>
+                        <label><input type="checkbox" name="amenity_toilet" value="true" <%=locals.amenity_toilet ? 'checked' : '' %>> Private Toilet</label>
+                        <label><input type="checkbox" name="amenity_furnished" value="true" <%=locals.amenity_furnished ? 'checked' : '' %>> Furnished</label>
+                    </td>
+
+                    <td align="right">
+                        <button type="submit"><b>Search</b></button>
+                        <a href="/listings"><button type="button">Clear</button></a>
+                    </td>
+                </tr>
+            </table>
+        </form>
+    </div>
+
+    <div class="listings-wrap">
+    <% if(listings.length===0) { %>
+        <p><i>No listings found. Be the first to post!</i></p>
+        <% } else { %>
+            <table class="listings-table">
+                <tr>
+                    <th width="120">Preview</th>
+                    <th>Listing Details</th>
+                    <th width="130">Action</th>
+                </tr>
+                <% listings.forEach(listing=> { %>
+                    <% const isOwner = currentUserId && listing.creator && (listing.creator._id ? listing.creator._id.toString() === currentUserId.toString() : listing.creator.toString() === currentUserId.toString()); %>
+                    <tr <% if (isOwner) { %>class="is-owner"<% } %>>
+                        <td align="center" valign="middle">
+                            <% if(listing.room) { %>
+                                <img src="/images/<%= listing.room.image %>" alt="Thumbnail" width="100"><br>
+                                <span class="type-badge">Room</span>
+                                <% } else { %>
+                                    <span class="type-badge seeker">Seeker</span>
+                                    <% } %>
+                        </td>
+                        <td valign="top">
+                            <p class="listing-title">
+                                <%= listing.title %>
+                                <% if (isOwner) { %>
+                                    <span class="badge badge-owner">Your Listing</span>
+                                <% } %>
+                                <% if (listing.matchScore != null && listing.matchScore > 0) { %>
+                                    <span class="badge badge-match"><%= listing.matchScore %>% Match</span>
+                                <% } %>
+                            </p>
+                            <table class="listing-meta">
+                                <tr>
+                                    <td>Budget/Rent:</td>
+                                    <td>$<%= listing.budget %> / month</td>
+                                </tr>
+                                <tr>
+                                    <td>Slots left:</td>
+                                    <td>
+                                        <%= listing.noOfSlots - (listing.availableSlots ? listing.availableSlots.length
+                                            : 0) %>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Preferred Gender:</td>
+                                    <td>
+                                        <%= listing.preferredGender %>
+                                    </td>
+                                </tr>
+                                <% if (listing.room && listing.room.region) { %>
+                                <tr>
+                                    <td>Region:</td>
+                                    <td><%= listing.room.region %></td>
+                                </tr>
+                                <% } %>
+                            </table>
+                        </td>
+                        <td align="center" valign="middle">
+                            <a href="/listings/<%= listing._id %>" class="btn-view">View Details</a>
+                        </td>
+                    </tr>
+                    <% }) %>
+            </table>
+            <% } %>
+    </div>
+</body>
+
+</html>

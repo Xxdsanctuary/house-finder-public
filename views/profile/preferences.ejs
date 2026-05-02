@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Room Preferences - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <h1>Your Room Preferences</h1>
+    <p>All fields are optional. Fill in what you know, and we'll use it to help match you with listings.</p>
+
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <form action="/profile/preferences" method="POST">
+
+        <label>Preferred Regions (select all that apply)</label><br>
+        <% ['North', 'South', 'East', 'West', 'Central'].forEach(region => { %>
+            <input type="checkbox" name="regions" value="<%= region %>"
+                <%= (preferences && preferences.regions && preferences.regions.includes(region)) ? 'checked' : '' %>>
+            <%= region %><br>
+        <% }) %>
+        <br>
+
+        <label>Maximum Budget (SGD/month)</label><br>
+        <input type="number" name="maxBudget" min="0" placeholder="e.g. 1500"
+            value="<%= (preferences && preferences.maxBudget) ? preferences.maxBudget : '' %>"><br><br>
+
+        <label>Required Amenities</label><br>
+        <input type="checkbox" name="privateToilet" value="true"
+            <%= (preferences && preferences.amenities && preferences.amenities.privateToilet) ? 'checked' : '' %>>
+            Private Toilet<br>
+        <input type="checkbox" name="aircon" value="true"
+            <%= (preferences && preferences.amenities && preferences.amenities.aircon) ? 'checked' : '' %>>
+            Air Conditioning<br>
+        <input type="checkbox" name="wifi" value="true"
+            <%= (preferences && preferences.amenities && preferences.amenities.wifi) ? 'checked' : '' %>>
+            WiFi<br>
+        <input type="checkbox" name="fullyFurnished" value="true"
+            <%= (preferences && preferences.amenities && preferences.amenities.fullyFurnished) ? 'checked' : '' %>>
+            Fully Furnished<br><br>
+
+        <button type="submit">Save Preferences</button>
+    </form>
+
+    <br>
+    <% if (fromRegister) { %>
+        <a href="/auth/login">Skip for now</a>
+    <% } else { %>
+        <a href="/profile">Back to Profile</a>
+    <% } %>
+
+</body>
+</html>

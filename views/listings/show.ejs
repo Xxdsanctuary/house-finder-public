@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>
+        <%= listing.title %>
+    </title>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+    <table width="100%">
+        <tr>
+            <td align="left"><a href="/listings">Back to Marketplace</a></td>
+            <td align="right">
+                <% if (listing.creator && listing.creator._id.toString()===currentUserId.toString()) { %>
+                    <a href="/listings/<%= listing._id %>/edit"><button>Edit Listing</button></a>
+                    <form action="/listings/<%= listing._id %>/delete" method="POST" style="display:inline;"
+                        onsubmit="return confirm('Are you sure you want to delete this listing?');">
+                        <button type="submit" style="color:red;">Delete Listing</button>
+                    </form>
+                <% } else if (isCurrentUserAdmin) { %>
+                    <form action="/listings/<%= listing._id %>/delete" method="POST" style="display:inline;"
+                        onsubmit="return confirm('Delete this listing as admin?');">
+                        <button type="submit" style="color:red;">Delete Listing (Admin)</button>
+                    </form>
+                <% } else { %>
+                    <% if (hasRequested) { %>
+                        <a href="/requests/show-applicant/<%= listing._id %>"><button>View Messages</button></a>
+                    <% } else { %>
+                        <form action="/requests/new" method="POST" style="display:inline;">
+                            <input type="hidden" name="ownerId"
+                                value="<%= listing.creator ? listing.creator._id : '' %>">
+                            <input type="hidden" name="listingId" value="<%= listing._id %>">
+                            <button type="submit" <%=!listing.creator ? 'disabled' : '' %>>Send Request</button>
+                        </form>
+                    <% } %>
+                    <% if (isShortlisted) { %>
+                        <form action="/shortlist/<%= shortlistId %>/remove" method="POST" style="display:inline;">
+                            <input type="hidden" name="redirectTo" value="/listings/<%= listing._id %>">
+                            <button type="submit">Remove from Shortlist</button>
+                        </form>
+                    <% } else { %>
+                        <form action="/shortlist/add" method="POST" style="display:inline;">
+                            <input type="hidden" name="listingId" value="<%= listing._id %>">
+                            <button type="submit">Add to Shortlist</button>
+                        </form>
+                    <% } %>
+                <% } %>
+            </td>
+        </tr>
+    </table>
+    <hr>
+
+    <table border="0" cellpadding="10" cellspacing="0" width="100%">
+        <tr>
+            <td valign="top" width="50%" bgcolor="#fdfdfd" border="1">
+                <h1>
+                    <%= listing.title %>
+                </h1>
+
+                <table border="0" cellpadding="8" cellspacing="0">
+                    <tr>
+                        <td><b>Date Posted:</b></td>
+                        <td>
+                            <%= listing.createdAt ? listing.createdAt.toLocaleDateString() : 'Unknown' %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Status:</b></td>
+                        <td>
+                            <strong style="color: <%= listing.status === 'fully booked' ? 'red' : 'green' %>;">
+                                <%= listing.status ? listing.status.toUpperCase() : 'AVAILABLE' %>
+                            </strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><b>Available Slots:</b></td>
+                        <td valign="top">
+                            <b>
+                                <%= listing.noOfSlots - (listing.availableSlots ? listing.availableSlots.length : 0) %>
+                            </b> left out of <%= listing.noOfSlots %>
+
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Budget / Rent:</b></td>
+                        <td>$<%= listing.budget %>
+                        </td>
+                    </tr>
+                    <tr bgcolor="#f0f0f0">
+                        <td><b>Preferred Gender:</b></td>
+                        <td>
+                            <%= listing.preferredGender %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><b>Listing Description:</b></td>
+                        <td><i>
+                                <%= listing.description %>
+                            </i></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <hr>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <h3 style="margin:0;">About the Lister</h3>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><b>Username:</b></td>
+                        <td>
+                            <%= listing.creator ? listing.creator.username : 'Unknown' %>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top"><b>Bio:</b></td>
+                        <td><i>
+                                <%= (listing.creator && listing.creator.bio) ? listing.creator.bio : 'No bio provided'
+                                    %>
+                            </i></td>
+                    </tr>
+
+                    <% if(listing.creator && listing.creator.preferences) { %>
+                        <tr>
+                            <td colspan="2">
+                                <hr align="left" width="100%">
+                                <h3 style="margin:0;">User's Seeking Preferences</h3>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Regions:</b></td>
+                            <td>
+                                <%= (listing.creator.preferences.regions && listing.creator.preferences.regions.length>
+                                    0) ? listing.creator.preferences.regions.join(', ') : 'Any' %>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><b>Max Budget:</b></td>
+                            <td>$<%= listing.creator.preferences.maxBudget || 'Any' %>
+                            </td>
+                        </tr>
+                        <% } %>
+                </table>
+            </td>
+
+            <td valign="top" width="50%">
+                <!-- THIS IS THE CONDITIONAL POPULATE LOGIC -->
+                <% if(listing.room) { %>
+                    <fieldset>
+                        <legend>
+                            <h2>Room to Share!</h2>
+                        </legend>
+                        <div align="center">
+                            <img src="/images/<%= listing.room.image %>" alt="Room Image" width="250">
+                        </div><br>
+
+                        <table border="1" cellpadding="8" cellspacing="0" width="100%">
+                            <tr bgcolor="#e6f7ff">
+                                <td colspan="2"><b>
+                                        <%= listing.room.title %>
+                                    </b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Location:</b></td>
+                                <td>
+                                    <%= listing.room.region %> - <%= listing.room.nearestMRT %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>About Room:</b></td>
+                                <td><small>
+                                        <%= listing.room.description %>
+                                    </small></td>
+                            </tr>
+                            <tr bgcolor="#f0f0f0">
+                                <td colspan="2" align="center"><b>Amenities Included</b></td>
+                            </tr>
+                            <tr>
+                                <td><b>Toilet:</b></td>
+                                <td>
+                                    <%= listing.room.amenities.privateToilet ? "Private" : "Shared" %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Air Con:</b></td>
+                                <td>
+                                    <%= listing.room.amenities.aircon ? "Yes" : "No" %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Wi-Fi:</b></td>
+                                <td>
+                                    <%= listing.room.amenities.wifi ? "Yes" : "No" %>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><b>Condition:</b></td>
+                                <td>
+                                    <%= listing.room.amenities.fullyFurnished ? "Fully Furnished" : "Unfurnished" %>
+                                </td>
+                            </tr>
+                        </table>
+                    </fieldset>
+                    <% } else { %>
+                        <div align="center" style="padding: 40px; border: 2px dashed #ccc;">
+                            <h2>Looking for Room and Roomates</h2>
+                            <p><i>This user doesn't have a specific room to offer.<br>They are searching for one to
+                                    join!</i></p>
+                        </div>
+                        <% } %>
+            </td>
+        </tr>
+    </table>
+
+    <hr>
+    <a href="/listings/<%= listing._id %>/comments">View Comments</a>
+    <p><small>Listing ID: <%= listing._id %></small></p>
+    <% if(listing.room) { %>
+        <p><small>Database Room ID: <%= listing.room._id %></small></p>
+        <% } %>
+    
+</body>
+
+</html>

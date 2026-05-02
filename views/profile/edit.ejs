@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+    <h1>Edit Profile</h1>
+
+    <% if (error) { %>
+        <p style="color: red;"><%= error %></p>
+    <% } %>
+
+    <% if (success) { %>
+        <p style="color: green;"><%= success %></p>
+    <% } %>
+
+    <form action="/profile/edit" method="POST">
+
+        <label>Username *</label><br>
+        <input type="text" name="username" value="<%= user.username %>" required><br><br>
+
+        <label>Email *</label><br>
+        <input type="email" name="email" value="<%= user.email %>" required><br><br>
+
+        <label>Gender *</label><br>
+        <select name="gender" required>
+            <option value="male"   <%= user.gender === 'male'   ? 'selected' : '' %>>Male</option>
+            <option value="female" <%= user.gender === 'female' ? 'selected' : '' %>>Female</option>
+            <option value="others" <%= user.gender === 'others' ? 'selected' : '' %>>Others</option>
+        </select><br><br>
+
+        <label>Age *</label><br>
+        <input type="number" name="age" value="<%= user.age %>" min="16" max="100" required><br><br>
+
+        <label>Bio</label><br>
+        <textarea name="bio" rows="3" cols="50"><%= user.bio || '' %></textarea><br><br>
+
+        <label>Contact Number</label><br>
+        <input type="text" name="contactNumber" value="<%= user.contactNumber || '' %>" placeholder="e.g. +65 9123 4567"><br><br>
+
+        <button type="submit">Save Changes</button>
+    </form>
+
+    <br>
+    <a href="/profile/password">Change Password</a> |
+    <a href="/profile">Back to Profile</a>
+
+</body>
+</html>

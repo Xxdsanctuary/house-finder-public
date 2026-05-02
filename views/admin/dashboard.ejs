@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: sans-serif; background: #f8f8f8; color: #222; }
+
+        .content { max-width: 680px; margin: 32px auto; padding: 0 20px 60px; }
+
+        .welcome { margin-bottom: 24px; }
+        .welcome h1 { font-size: 1.4em; margin-bottom: 4px; }
+        .welcome p  { color: #666; font-size: 0.92em; }
+
+        .quick-links { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 28px; }
+        .quick-links a {
+            padding: 9px 18px;
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #1a1a2e;
+            font-size: 0.9em;
+        }
+        .quick-links a:hover { background: #f0f0f0; border-color: #bbb; }
+        .quick-links a.primary { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+        .quick-links a.primary:hover { background: #16213e; }
+
+        .card {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 16px 20px;
+        }
+        .rf-table {
+            width: 100%;
+            border-collapse: collapse;
+            border-top: 2px solid #333;
+            border-bottom: 1px solid #ccc;
+            text-align: center;
+            font-size: 0.92em;
+        }
+        .rf-table th, .rf-table td { padding: 10px 8px; }
+        .rf-table thead tr { border-bottom: 1px solid #ccc; }
+        .rf-table tbody tr { border-bottom: 1px solid #eee; }
+        .rf-table tbody tr:last-child { border-bottom: none; }
+        .rf-table .left { text-align: left; }
+    </style>
+</head>
+
+<body>
+    <%- include('../partials/nav') %>
+
+    <div class="content">
+        <div class="welcome">
+            <h1>Admin Dashboard</h1>
+            <p>Manage users and announcements.</p>
+        </div>
+
+        <div class="quick-links">
+            <a href="/admin/users" class="primary">User Management</a>
+            <a href="/admin/announcements">Announcements</a>
+            <a href="/listings">Browse Listings</a>
+        </div>
+
+        <div class="card">
+            <table class="rf-table">
+                <thead>
+                    <tr>
+                        <th class="left">Metric</th>
+                        <th>Count</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="left">Total Users</td>
+                        <td><%= totalUsers %></td>
+                    </tr>
+                    <tr>
+                        <td class="left">Active Users</td>
+                        <td><%= activeUsers %></td>
+                    </tr>
+                    <tr>
+                        <td class="left">Total Listings</td>
+                        <td><%= totalListings %></td>
+                    </tr>
+                    <tr>
+                        <td class="left">Available Listings</td>
+                        <td><%= availableListings %></td>
+                    </tr>
+                    <tr>
+                        <td class="left">Fully Booked Listings</td>
+                        <td><%= fullyBookedListings %></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,67 @@
+<style>
+    .rf-nav {
+        background: #1a1a2e;
+        padding: 0 20px;
+        display: flex;
+        align-items: center;
+        gap: 0;
+        font-family: sans-serif;
+        margin-bottom: 20px;
+    }
+    .rf-nav .rf-brand {
+        color: #fff;
+        font-weight: bold;
+        font-size: 1.05em;
+        text-decoration: none;
+        padding: 14px 20px 14px 0;
+        margin-right: 8px;
+        border-right: 1px solid #333;
+        white-space: nowrap;
+    }
+    .rf-nav a {
+        color: #ccc;
+        text-decoration: none;
+        padding: 14px 14px;
+        font-size: 0.9em;
+        display: inline-block;
+        transition: background 0.15s, color 0.15s;
+    }
+    .rf-nav a:hover {
+        background: #16213e;
+        color: #fff;
+    }
+    .rf-nav .rf-spacer { flex: 1; }
+    .rf-nav .rf-user {
+        color: #aaa;
+        font-size: 0.85em;
+        padding: 14px 0 14px 14px;
+        border-left: 1px solid #333;
+    }
+    .rf-nav .rf-user a {
+        color: #e88;
+        padding: 0 0 0 10px;
+        border-left: none;
+    }
+</style>
+<nav class="rf-nav">
+    <a href="/" class="rf-brand">Roommate Finder</a>
+    <a href="/listings">Browse</a>
+    <% if (currentUser) { %>
+        <a href="/listings/new">Post Listing</a>
+        <a href="/shortlist">Shortlist</a>
+        <a href="/requests">Requests</a>
+        <a href="/profile">Profile</a>
+        <% if (currentUser.role === 'admin') { %>
+            <a href="/admin">Admin</a>
+        <% } %>
+    <% } else { %>
+        <a href="/auth/login">Login</a>
+        <a href="/auth/register">Register</a>
+    <% } %>
+    <% if (currentUser) { %>
+        <div class="rf-spacer"></div>
+        <div class="rf-user">
+            <%= currentUser.username %> &nbsp;<a href="/auth/logout">Sign out</a>
+        </div>
+    <% } %>
+</nav>

@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Comments - Roommate Finder</title>
+</head>
+<body>
+    <%- include('../partials/nav') %>
+
+    <h1>Comments</h1>
+
+    <a href="/listings/<%= listingId %>/comments/new">Add a Comment</a>
+    <br><br>
+
+    <% if (comments.length === 0) { %>
+        <p>No comments yet. Be the first!</p>
+    <% } else { %>
+        <% comments.forEach(comment => { %>
+            <div style="border: 1px solid #ccc; padding: 10px; margin-bottom: 10px;">
+                <strong>By: <%= comment.username %></strong>
+                <% if (comment.edited) { %><span style="color:#888; font-size:0.85em;"> (edited)</span><% } %>
+                <br>
+                Date posted: <%= new Date(comment.createdAt).toDateString() %>
+                <hr>
+                <p><%= comment.body %></p>
+
+                <% if (currentUserId && comment.userId.toString() === currentUserId) { %>
+                    <a href="/listings/<%= listingId %>/comments/<%= comment._id %>/edit">Edit</a> |
+                    <form action="/listings/<%= listingId %>/comments/<%= comment._id %>/delete" method="POST" style="display:inline">
+                        <button type="submit" onclick="return confirm('Delete this comment and all its replies?')">Delete</button>
+                    </form>
+                <% } %>
+
+                <% if (currentUserId) { %>
+                    <br><br>
+                    <details>
+                        <summary style="cursor:pointer; color:#555;">Reply</summary>
+                        <form action="/listings/<%= listingId %>/comments" method="POST" style="margin-top:8px;">
+                            <input type="hidden" name="parentId" value="<%= comment._id %>">
+                            <textarea name="body" rows="2" cols="40" placeholder="Write a reply..." required></textarea><br>
+                            <button type="submit">Post Reply</button>
+                        </form>
+                    </details>
+                <% } %>
+
+                <!-- Nested replies -->
+                <% if (comment.replies && comment.replies.length > 0) { %>
+                    <div style="margin-left: 24px; margin-top: 10px; border-left: 3px solid #ddd; padding-left: 10px;">
+                        <% comment.replies.forEach(reply => { %>
+                            <div style="margin-bottom: 8px;">
+                                <strong><%= reply.username %></strong>
+                                <% if (reply.edited) { %><span style="color:#888; font-size:0.85em;"> (edited)</span><% } %>
+                                <span style="color:#888; font-size:0.85em;"> &middot; <%= new Date(reply.createdAt).toDateString() %></span>
+                                <p style="margin:4px 0;"><%= reply.body %></p>
+                                <% if (currentUserId && reply.userId.toString() === currentUserId) { %>
+                                    <a href="/listings/<%= listingId %>/comments/<%= reply._id %>/edit">Edit</a> |
+                                    <form action="/listings/<%= listingId %>/comments/<%= reply._id %>/delete" method="POST" style="display:inline">
+                                        <button type="submit" onclick="return confirm('Delete this reply?')">Delete</button>
+                                    </form>
+                                <% } %>
+                            </div>
+                        <% }) %>
+                    </div>
+                <% } %>
+            </div>
+        <% }) %>
+    <% } %>
+
+    <br>
+    <a href="/listings/<%= listingId %>">Back to Listing</a>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>All Rooms</title>
+</head>
+
+<body>
+    <h1>All Room Listings</h1>
+    <a href="/rooms/new">Create New Room</a>
+    <hr>
+
+    <% if(rooms.length===0) { %>
+        <p>No rooms found. Be the first to create one!</p>
+        <% } else { %>
+            <ul>
+                <% rooms.forEach(room=> { %>
+                    <li>
+                        <img src="/images/<%= room.image %>" alt="Room Thumbnail">
+                        <div>
+                            <strong>
+                                <%= room.title %>
+                            </strong> - $<%= room.monthlyRent %>/month (<%= room.nearestMRT %>, <%= room.region %>)<br>
+                                        <a href="/rooms/<%= room._id %>">View Details</a> |
+                                        <a href="/rooms/<%= room._id %>/edit">Edit</a> |
+                                        <form action="/rooms/<%= room._id %>/delete" method="POST">
+                                            <button type="submit"
+                                                onclick="return confirm('Are you sure?')">Delete</button>
+                                        </form>
+                        </div>
+                    </li>
+                    <br>
+                    <% }) %>
+            </ul>
+            <% } %>
+</body>
+
+</html>
