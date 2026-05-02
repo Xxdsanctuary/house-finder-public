@@ -2,10 +2,20 @@
 
 A dynamic web app for finding roommates and shared flats in Singapore. Built with Node.js, Express, EJS, and MongoDB.
 
+## Disclaimer
+
+This project is a public version of the real repository. It is meant for our final project to our web application development class subject (IS113) taught in Singapore Management University. There is partial use of AI, only for debugging and code structure (read more below). 
+
+Special thanks to my teammates who have worked hard for this project:
+Dewa
+Cledwyn
+Seunghak
+Yu Xuan
+
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/) v18 or later
-- Database is hosted on MongoDB Atlas, no local MongoDB install required
+- MongoDB Database, preferably using MongoDB Atlas to connect
 
 ## Setup
 
